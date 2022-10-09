@@ -1,0 +1,94 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "data/cleaned_cases_malaysia.csv"
+  },
+  "width": 700,
+  "height": 350,
+  "layer": [
+    {
+      "mark": "line",
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal",
+          "title": null
+        },
+        "y": {
+          "field": "cases_new",
+          "type": "quantitative",
+          "title": "Total Cummulative Cases"
+        },
+        "tooltip": [
+          {
+            "field": "date",
+            "type": "temporal",
+            "title": "Date"
+          },
+          {
+            "field": "cases_new",
+            "type": "quantitative",
+            "title": "New Cases",
+            "format": ","
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "rule",
+        "color": "red",
+        "size": 2
+      },
+      "encoding": {
+        "y": {
+          "aggregate": "mean",
+          "field": "cases_new"
+        },
+        "tooltip": [
+          {
+            "aggregate": "mean",
+          "field": "cases_new",
+          "type": "quantitative",
+          "format": ",",
+          "title": "Average Cases Per day"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dx": 50,
+        "dy": -20
+      },
+      "encoding": {
+        "text": {
+          "value": [
+            "Average",
+            "cases per day"
+          ]
+        },
+        "x": {
+          "value": 0
+        },
+        "y": {
+          "aggregate": "mean",
+          "field": "cases_new"
+        },
+        "color": {
+          "value": "red"
+        },
+        "tooltip": [
+          {
+            "aggregate": "mean",
+          "field": "cases_new",
+          "type": "quantitative",
+          "format": ",",
+          "title": "Average Cases Per day"
+          }
+        ]
+      }
+    }
+  ]
+}

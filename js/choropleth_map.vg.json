@@ -1,0 +1,186 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "",
+  "width": 900,
+  "height": 400,
+  "data": {
+    "url": "js/malaysia_states.topojson",
+    "format": {
+      "type": "topojson",
+      "feature": "states"
+    }
+  },
+  "transform": [
+    {
+      "lookup": "properties.Name",
+      "from": {
+        "data": {
+          "url": "data/cleaned_hospital.csv"
+        },
+        "key": "state",
+        "fields": [
+          "state",
+          "beds_covid",
+          "pop"
+        ]
+      }
+    },
+    {
+      "calculate": "(datum.beds_covid/datum.pop*10000)",
+      "as": "Beds Dedicated For Covid per 10,000 Population"
+    }
+  ],
+  "params": [
+  ],
+  "projection": {
+    "type": "equirectangular"
+  },
+  
+  "layer": [
+    {
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white",
+        "fill": "lightgray"
+      }
+    },
+    {
+      
+      "params": [
+        {
+          "name": "State_selection",
+          "select": {
+            "type": "point",
+            "fields": [
+              "state"
+            ]
+          },
+          "bind": {
+            "input": "select",
+            "options": [
+              null,
+              "Johor",
+              "Kedah",
+              "Kelantan",
+              "Melaka",
+              "Negeri Sembilan",
+              "Pahang",
+              "Perak",
+              "Perlis",
+              "Penang",
+              "Sabah",
+              "Sarawak",
+              "Selangor",
+              "Terengganu",
+              "Kuala Lumpur",
+              "Labuan",
+              "Putrajaya"
+            ],
+            "labels": [
+              "Show All",
+              "Johor",
+              "Kedah",
+              "Kelantan",
+              "Melaka",
+              "Negeri Sembilan",
+              "Pahang",
+              "Perak",
+              "Perlis",
+              "Penang",
+              "Sabah",
+              "Sarawak",
+              "Selangor",
+              "Terengganu",
+              "Kuala Lumpur",
+              "Labuan",
+              "Putrajaya"
+            ],
+            "name": "States Selection: "
+          }
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white"
+      },
+      "encoding": {
+        "color": {
+          "field": "Beds Dedicated For Covid per 10,000 Population",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "scheme": "purples"
+          },
+          "title": "Covid Beds per 10,000 Population"
+        },
+        "opacity": {
+          "condition": {
+            "param": "State_selection",
+            "value": 1
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "properties.Name",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "beds_covid",
+            "type": "quantitative",
+            "title": "Beds Dedicated For Covid"
+          },
+          {
+            "field": "pop",
+            "type": "quantitative",
+            "title": "Population"
+          },
+          {
+            "field": "Beds Dedicated For Covid per 10,000 Population",
+            "type": "quantitative",
+            "format": ".2f"
+          }
+        ]
+      }
+    },
+  
+    {
+      "data": {
+        "url": "data/coords_state.csv"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        }
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "point",
+            "color": "red",
+            "size": 70
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "dy": 12,
+            "dx": -10
+          },
+          "encoding": {
+            "text": {
+              "field": "state",
+              "type": "nominal"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
